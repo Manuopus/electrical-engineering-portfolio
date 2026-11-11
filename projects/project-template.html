@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!--
+  PROJECT PAGE TEMPLATE
+  1. Copy this file and rename it, e.g. projects/voltage-divider.html (lowercase, hyphens).
+  2. Replace every CAPITAL placeholder and every .todo box.
+  3. Status pill: status-planned | status-in-progress | status-completed
+  4. In js/data.js set the project's  page: "projects/your-file.html"
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROJECT TITLE · Emmanuel Omoregbe</title>
+  <meta name="description" content="One sentence describing the project.">
+  <meta name="theme-color" content="#0a1220">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Note the "../": this page is one folder deeper than index.html -->
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../index.html" aria-label="Emmanuel Omoregbe, home">
+        <span class="brand-mark" aria-hidden="true">EO</span>
+        <span class="brand-name">Emmanuel Omoregbe</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="visually-hidden">Open menu</span>
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="Main">
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#knowledge">Knowledge</a>
+        <a href="../index.html#log">Log</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="project-page">
+    <div class="wrap">
+      <a class="back-link" href="../index.html#projects">← Back to all projects</a>
+
+      <header class="project-header">
+        <div class="card-meta">
+          <span>Project NN · Category</span>
+          <span class="status status-planned">Planned</span>
+        </div>
+        <h1>PROJECT TITLE</h1>
+        <p class="lead">
+          Short description: what you built and why.
+        </p>
+      </header>
+
+      <div class="project-layout">
+        <nav class="toc" aria-label="On this page">
+          <p>On this page</p>
+          <ol>
+            <li><a href="#objective">Objective</a></li>
+            <li><a href="#theory">Theory</a></li>
+            <li><a href="#components">Components</a></li>
+            <li><a href="#design">Design and calculation</a></li>
+            <li><a href="#implementation">Implementation</a></li>
+            <li><a href="#results">Results</a></li>
+            <li><a href="#problems">Problems and solutions</a></li>
+            <li><a href="#learned">What I learned</a></li>
+            <li><a href="#improvements">Improvements</a></li>
+            <li><a href="#links">Links</a></li>
+          </ol>
+        </nav>
+
+        <article class="doc">
+
+          <!-- A worked calculation box. Copy it into any section:
+          <div class="calc">
+            <p>R = U / I</p>
+            <p>R = 3.0 V / 0.015 A</p>
+            <p class="result">R = 200 Ω</p>
+            <p class="step">Optional note explaining the step.</p>
+          </div>
+          -->
+          <section id="objective">
+            <h2>Objective</h2>
+            <p class="todo">What should this project achieve? One or two sentences.</p>
+          </section>
+
+          <section id="theory">
+            <h2>Theory</h2>
+            <p class="todo">Explain the physics or maths behind it. Formulas go in a calc box (see below).</p>
+          </section>
+
+          <section id="components">
+            <h2>Components and software</h2>
+            <p class="todo">List every part with its value, and every program you used.</p>
+          </section>
+
+          <section id="design">
+            <h2>Design and calculation</h2>
+            <p class="todo">Circuit diagram and every calculation: formula, substitution with units, result.</p>
+          </section>
+
+          <section id="implementation">
+            <h2>Implementation</h2>
+            <p class="todo">How you built it. Add photos or screenshots.</p>
+          </section>
+
+          <section id="results">
+            <h2>Results</h2>
+            <p class="todo">What you measured or observed. Compare it with your calculation.</p>
+          </section>
+
+          <section id="problems">
+            <h2>Problems and solutions</h2>
+            <p class="todo">What went wrong, and how you found and fixed it.</p>
+          </section>
+
+          <section id="learned">
+            <h2>What I learned</h2>
+            <p class="todo">In your own words.</p>
+          </section>
+
+          <section id="improvements">
+            <h2>Possible improvements</h2>
+            <p class="todo">What you would do next or differently.</p>
+          </section>
+
+          <section id="links">
+            <h2>Links</h2>
+            <p class="todo">Source code, simulation file, datasheets.</p>
+          </section>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>© <span id="year"></span> Emmanuel Omoregbe</p>
+      <p>Built by hand with HTML, CSS and JavaScript.</p>
+    </div>
+  </footer>
+</body>
+</html>

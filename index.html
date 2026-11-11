@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Emmanuel Omoregbe · Electrical Engineering Portfolio</title>
+  <meta name="description" content="Electrical engineering portfolio of Emmanuel Omoregbe: electronics, programming, mathematics and physics projects, documented while preparing for a dual study programme in Elektrotechnik.">
+  <meta name="theme-color" content="#0a1220">
+
+  <!-- Share preview (used when the link is posted on LinkedIn, WhatsApp, etc.) -->
+  <meta property="og:title" content="Emmanuel Omoregbe · Electrical Engineering Portfolio">
+  <meta property="og:description" content="Electronics, programming, maths and physics projects, documented as I learn.">
+  <meta property="og:type" content="website">
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <!-- Fonts: IBM Plex Sans for text, IBM Plex Mono for formulas, values and labels -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- data.js holds your content (skills, projects, notes, log). main.js turns it into HTML. -->
+  <script src="js/data.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ============ HEADER / NAVIGATION ============ -->
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#home" aria-label="Emmanuel Omoregbe, back to top">
+        <span class="brand-mark" aria-hidden="true">EO</span>
+        <span class="brand-name">Emmanuel Omoregbe</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="visually-hidden">Open menu</span>
+      </button>
+
+      <nav id="site-nav" class="site-nav" aria-label="Main">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#knowledge">Knowledge</a>
+        <a href="#log">Log</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ HOME / HERO ============ -->
+    <section id="home" class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-text" data-enter>
+          <p class="eyebrow">Electrical engineering portfolio</p>
+          <h1>Learning electrical engineering by building it, then writing down how it works.</h1>
+          <p class="lead">
+            I am preparing for a dual study programme (Duales Studium) in Elektrotechnik in Germany.
+            This site documents my circuits, code and calculations as I go, including what went wrong.
+          </p>
+          <div class="button-row">
+            <a class="button button-primary" href="#projects">See my projects</a>
+            <a class="button button-secondary" href="https://github.com/Manuopus" target="_blank" rel="noopener">Open my GitHub</a>
+          </div>
+          <!-- EDIT: update this line whenever your focus changes -->
+          <p class="focus"><span class="focus-dot" aria-hidden="true"></span>Current focus: Ohm's law and LED circuits</p>
+        </div>
+
+        <!-- The schematic of the first electronics project. The dots show conventional current flow. -->
+        <figure class="schematic" data-enter aria-label="Circuit diagram: a 5 volt supply, a 220 ohm resistor and a red LED in series">
+          <div class="schematic-bar" aria-hidden="true">
+            <span>project-02 / led-resistor.sch</span>
+            <span>I = (U<sub>B</sub> − U<sub>F</sub>) / R</span>
+          </div>
+          <svg viewBox="0 0 360 250" role="img" aria-hidden="true">
+            <!-- wire loop: up the left, across the top, down the right, back along the bottom -->
+            <path id="loop" class="wire" d="M70 190 L70 60 L290 60 L290 190 Z"/>
+
+            <g class="current">
+              <circle r="3.5"><animateMotion dur="4s" repeatCount="indefinite" begin="0s"><mpath href="#loop"/></animateMotion></circle>
+              <circle r="3.5"><animateMotion dur="4s" repeatCount="indefinite" begin="-1s"><mpath href="#loop"/></animateMotion></circle>
+              <circle r="3.5"><animateMotion dur="4s" repeatCount="indefinite" begin="-2s"><mpath href="#loop"/></animateMotion></circle>
+              <circle r="3.5"><animateMotion dur="4s" repeatCount="indefinite" begin="-3s"><mpath href="#loop"/></animateMotion></circle>
+            </g>
+
+            <!-- battery (left) -->
+            <rect class="gap" x="52" y="108" width="36" height="34"/>
+            <line class="part" x1="52" y1="114" x2="88" y2="114"/>
+            <line class="part thick" x1="61" y1="128" x2="79" y2="128"/>
+            <line class="part" x1="70" y1="114" x2="70" y2="108"/>
+            <line class="part" x1="70" y1="128" x2="70" y2="142"/>
+            <text class="label" x="96" y="118">+</text>
+            <text class="value" x="20" y="126">5 V</text>
+
+            <!-- resistor (top) -->
+            <rect class="gap" x="140" y="48" width="80" height="24"/>
+            <path class="part" d="M140 60 L148 60 L153 50 L163 70 L173 50 L183 70 L193 50 L203 70 L208 60 L220 60"/>
+            <text class="value" x="180" y="36" text-anchor="middle">R1 · 220 Ω</text>
+
+            <!-- LED (right), pointing down in the direction of current -->
+            <rect class="gap" x="272" y="108" width="36" height="40"/>
+            <path class="part led" d="M276 112 L304 112 L290 136 Z"/>
+            <line class="part" x1="276" y1="138" x2="304" y2="138"/>
+            <line class="part" x1="290" y1="108" x2="290" y2="112"/>
+            <line class="part" x1="290" y1="138" x2="290" y2="148"/>
+            <path class="part glow" d="M310 116 L324 106 M318 106 L324 106 L324 112"/>
+            <path class="part glow" d="M310 128 L324 118 M318 118 L324 118 L324 124"/>
+            <text class="value" x="300" y="170" text-anchor="middle">D1 · red</text>
+
+            <!-- current label (bottom) -->
+            <text class="value accent" x="180" y="222" text-anchor="middle">I ≈ 13.6 mA</text>
+          </svg>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section id="about" class="section">
+      <div class="wrap">
+        <h2 class="section-title">About me</h2>
+        <div class="about-grid">
+          <div class="prose">
+            <!-- EDIT: rewrite these paragraphs in your own words. Keep them true. -->
+            <p>
+              I am interested in how electrical energy is turned into something useful: light, motion,
+              measurement, information. I want to understand circuits well enough to design them,
+              not only to copy them.
+            </p>
+            <p>
+              My plan is a dual study programme in Electrical Engineering (Elektrotechnik) in Germany,
+              where theory at university and practice in a company run side by side. That is also how
+              this portfolio works: each project starts with the theory and ends with a real result.
+            </p>
+            <p>
+              Everything here is honest about its state. Planned work is marked as planned, and a skill
+              only counts as demonstrated once a project on this page proves it.
+            </p>
+          </div>
+
+          <dl class="facts">
+            <div>
+              <dt>Direction</dt>
+              <dd>Duales Studium, Elektrotechnik</dd>
+            </div>
+            <div>
+              <dt>Learning now</dt>
+              <dd>Circuit basics, web development</dd>
+            </div>
+            <div>
+              <dt>Method</dt>
+              <dd>Theory first, then build, test and document</dd>
+            </div>
+            <div>
+              <dt>Tools</dt>
+              <dd>VS Code, Git, GitHub</dd>
+            </div>
+            <!-- EDIT: add a "Long-term goal" row once you have decided on one, e.g. a field like embedded systems or energy technology -->
+
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SKILLS ============ -->
+    <section id="skills" class="section section-alt">
+      <div class="wrap">
+        <h2 class="section-title">Skills</h2>
+        <p class="section-intro">
+          Three levels, kept strict:
+          <span class="status status-planned">Planned</span>
+          <span class="status status-learning">Learning</span>
+          <span class="status status-demonstrated">Demonstrated</span>
+          A skill is only marked demonstrated when it links to a project that proves it.
+        </p>
+        <!-- Filled in by js/main.js from the "skills" list in js/data.js -->
+        <div class="skill-groups" id="skill-groups"></div>
+      </div>
+    </section>
+
+    <!-- ============ PROJECTS ============ -->
+    <section id="projects" class="section">
+      <div class="wrap">
+        <h2 class="section-title">Projects</h2>
+        <p class="section-intro">
+          Each project records the objective, theory, build, results, problems and lessons.
+        </p>
+        <div class="filters" id="project-filters" role="group" aria-label="Filter projects by area"></div>
+        <!-- Filled in by js/main.js from the "projects" list in js/data.js -->
+        <div class="card-grid" id="project-list"></div>
+      </div>
+    </section>
+
+    <!-- ============ ENGINEERING KNOWLEDGE ============ -->
+    <section id="knowledge" class="section section-alt">
+      <div class="wrap">
+        <h2 class="section-title">Engineering knowledge</h2>
+        <p class="section-intro">
+          My study notes: the formulas I use, what each symbol means, and a worked example.
+        </p>
+        <!-- Filled in by js/main.js from the "knowledge" list in js/data.js -->
+        <div class="card-grid" id="knowledge-list"></div>
+      </div>
+    </section>
+
+    <!-- ============ PROGRESS LOG ============ -->
+    <section id="log" class="section">
+      <div class="wrap">
+        <h2 class="section-title">Progress log</h2>
+        <p class="section-intro">What I learned and built, with dates, newest first.</p>
+        <!-- Filled in by js/main.js from the "log" list in js/data.js -->
+        <ol class="timeline" id="log-list"></ol>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" class="section section-alt">
+      <div class="wrap contact">
+        <h2 class="section-title">Contact</h2>
+        <p class="lead">
+          Interested in my progress, or offering a dual study place? For now you can follow my work on GitHub.
+        </p>
+        <div class="button-row">
+          <a class="button button-primary" href="https://github.com/Manuopus" target="_blank" rel="noopener">Follow me on GitHub</a>
+          <!-- EDIT: add your email or LinkedIn when you are ready, for example:
+          <a class="button button-secondary" href="mailto:you@your-address.com">Send me an email</a>
+          <a class="button button-secondary" href="https://www.linkedin.com/in/your-profile" target="_blank" rel="noopener">Open my LinkedIn</a>
+          -->
+          <a class="button button-secondary" href="https://github.com/Manuopus/electrical-engineering-portfolio" target="_blank" rel="noopener">View this site's code</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>© <span id="year"></span> Emmanuel Omoregbe</p>
+      <p>Built by hand with HTML, CSS and JavaScript.</p>
+    </div>
+  </footer>
+</body>
+</html>

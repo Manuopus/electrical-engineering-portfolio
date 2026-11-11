@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LED with a current-limiting resistor · Emmanuel Omoregbe</title>
+  <meta name="description" content="Project 02: calculating, building and measuring a current-limiting resistor for a red LED on a 5 V supply.">
+  <meta name="theme-color" content="#0a1220">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Note the "../": this page is one folder deeper than index.html -->
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../index.html" aria-label="Emmanuel Omoregbe, home">
+        <span class="brand-mark" aria-hidden="true">EO</span>
+        <span class="brand-name">Emmanuel Omoregbe</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="visually-hidden">Open menu</span>
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="Main">
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#knowledge">Knowledge</a>
+        <a href="../index.html#log">Log</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="project-page">
+    <div class="wrap">
+      <a class="back-link" href="../index.html#projects">← Back to all projects</a>
+
+      <header class="project-header">
+        <div class="card-meta">
+          <span>Project 02 · Electronics</span>
+          <span class="status status-planned">Planned</span>
+        </div>
+        <h1>LED with a current-limiting resistor</h1>
+        <p class="lead">
+          Calculate the resistor that keeps a red LED at a safe current on a 5 V supply,
+          then build the circuit and compare the measured current with the calculation.
+        </p>
+      </header>
+
+      <div class="project-layout">
+        <nav class="toc" aria-label="On this page">
+          <p>On this page</p>
+          <ol>
+            <li><a href="#objective">Objective</a></li>
+            <li><a href="#theory">Theory</a></li>
+            <li><a href="#components">Components</a></li>
+            <li><a href="#design">Design and calculation</a></li>
+            <li><a href="#implementation">Implementation</a></li>
+            <li><a href="#results">Results</a></li>
+            <li><a href="#problems">Problems and solutions</a></li>
+            <li><a href="#learned">What I learned</a></li>
+            <li><a href="#improvements">Improvements</a></li>
+            <li><a href="#links">Links</a></li>
+          </ol>
+        </nav>
+
+        <article class="doc">
+          <section id="objective">
+            <h2>Objective</h2>
+            <p>
+              An LED is not a resistor: once the voltage across it reaches its forward voltage, its
+              current rises very steeply. Connected straight to 5 V it would draw far too much current
+              and burn out. The goal is to choose a series resistor that limits the current to a safe
+              value, and to prove the choice by measurement.
+            </p>
+          </section>
+
+          <section id="theory">
+            <h2>Theory</h2>
+            <h3>Ohm's law</h3>
+            <p>
+              For a resistor, voltage <code>U</code> (volts, V), resistance <code>R</code> (ohms, Ω) and
+              current <code>I</code> (amperes, A) are linked by:
+            </p>
+            <div class="calc"><p class="result">U = R · I &nbsp;&nbsp;⇔&nbsp;&nbsp; R = U / I &nbsp;&nbsp;⇔&nbsp;&nbsp; I = U / R</p></div>
+
+            <h3>Kirchhoff's voltage law in this circuit</h3>
+            <p>
+              In a series loop, the supply voltage is shared between the parts. The LED takes its forward
+              voltage <code>U<sub>F</sub></code>, and the resistor takes the rest:
+            </p>
+            <div class="calc"><p class="result">U<sub>B</sub> = U<sub>F</sub> + U<sub>R</sub> &nbsp;&nbsp;⇒&nbsp;&nbsp; U<sub>R</sub> = U<sub>B</sub> − U<sub>F</sub></p></div>
+            <p>
+              Because the parts are in series, the same current flows through the resistor and the LED.
+              So setting the resistor's current sets the LED's current.
+            </p>
+          </section>
+
+          <section id="components">
+            <h2>Components and software</h2>
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Part</th><th>Value</th><th>Purpose</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Supply</td><td>5 V (USB or microcontroller board)</td><td>Low-voltage power source</td></tr>
+                  <tr><td>LED (D1)</td><td>Red, 5 mm, U<sub>F</sub> ≈ 2.0 V</td><td>Load to protect</td></tr>
+                  <tr><td>Resistor (R1)</td><td>220 Ω, ¼ W</td><td>Limits the current</td></tr>
+                  <tr><td>Breadboard, jumper wires</td><td>n/a</td><td>Build without soldering</td></tr>
+                  <tr><td>Multimeter</td><td>mA and V ranges</td><td>Measure current and voltages</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- EDIT: replace the typical LED values with the values from your LED's datasheet -->
+          </section>
+
+          <section id="design">
+            <h2>Design and calculation</h2>
+
+            <figure class="schematic" aria-label="Circuit diagram: 5 volt supply, 220 ohm resistor and red LED in series">
+              <div class="schematic-bar" aria-hidden="true"><span>led-resistor.sch</span><span>series circuit</span></div>
+              <svg viewBox="0 0 360 250" role="img" aria-hidden="true">
+                <path class="wire" d="M70 190 L70 60 L290 60 L290 190 Z"/>
+                <rect class="gap" x="52" y="108" width="36" height="34"/>
+                <line class="part" x1="52" y1="114" x2="88" y2="114"/>
+                <line class="part thick" x1="61" y1="128" x2="79" y2="128"/>
+                <line class="part" x1="70" y1="114" x2="70" y2="108"/>
+                <line class="part" x1="70" y1="128" x2="70" y2="142"/>
+                <text class="label" x="96" y="118">+</text>
+                <text class="value" x="20" y="126">5 V</text>
+                <rect class="gap" x="140" y="48" width="80" height="24"/>
+                <path class="part" d="M140 60 L148 60 L153 50 L163 70 L173 50 L183 70 L193 50 L203 70 L208 60 L220 60"/>
+                <text class="value" x="180" y="36" text-anchor="middle">R1 · 220 Ω</text>
+                <rect class="gap" x="272" y="108" width="36" height="40"/>
+                <path class="part led" d="M276 112 L304 112 L290 136 Z"/>
+                <line class="part" x1="276" y1="138" x2="304" y2="138"/>
+                <line class="part" x1="290" y1="108" x2="290" y2="112"/>
+                <line class="part" x1="290" y1="138" x2="290" y2="148"/>
+                <text class="value" x="300" y="170" text-anchor="middle">D1 · red</text>
+                <text class="value accent" x="180" y="222" text-anchor="middle">I ≈ 13.6 mA</text>
+              </svg>
+            </figure>
+
+            <h3>Given values</h3>
+            <ul>
+              <li>Supply voltage: U<sub>B</sub> = 5.0 V</li>
+              <li>LED forward voltage (typical red LED): U<sub>F</sub> ≈ 2.0 V</li>
+              <li>Target current: I = 15 mA = 0.015 A (below the usual 20 mA maximum)</li>
+            </ul>
+
+            <h3>Step 1: voltage across the resistor</h3>
+            <div class="calc">
+              <p>U<sub>R</sub> = U<sub>B</sub> − U<sub>F</sub></p>
+              <p>U<sub>R</sub> = 5.0 V − 2.0 V</p>
+              <p class="result">U<sub>R</sub> = 3.0 V</p>
+            </div>
+
+            <h3>Step 2: required resistance</h3>
+            <div class="calc">
+              <p>R = U<sub>R</sub> / I</p>
+              <p>R = 3.0 V / 0.015 A</p>
+              <p class="result">R = 200 Ω</p>
+              <p class="step">200 Ω is not a standard value. The next higher E12 value is 220 Ω. Rounding up keeps the current slightly lower, which is the safe side.</p>
+            </div>
+
+            <h3>Step 3: actual current with 220 Ω</h3>
+            <div class="calc">
+              <p>I = U<sub>R</sub> / R</p>
+              <p>I = 3.0 V / 220 Ω</p>
+              <p class="result">I ≈ 0.0136 A = 13.6 mA</p>
+            </div>
+
+            <h3>Step 4: power in the resistor</h3>
+            <div class="calc">
+              <p>P = U<sub>R</sub> · I</p>
+              <p>P = 3.0 V · 0.0136 A</p>
+              <p class="result">P ≈ 0.041 W = 41 mW</p>
+              <p class="step">A ¼ W resistor is rated for 250 mW, about six times more than needed, so it stays cool.</p>
+            </div>
+          </section>
+
+          <section id="implementation">
+            <h2>Implementation</h2>
+            <p class="todo">To be written after the build: how the circuit was placed on the breadboard, which way round the LED went (anode/cathode) and how the multimeter was connected in series to measure current. Add a photo.</p>
+          </section>
+
+          <section id="results">
+            <h2>Results</h2>
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Quantity</th><th>Calculated</th><th>Measured</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>U<sub>R</sub></td><td>3.0 V</td><td>n/a</td></tr>
+                  <tr><td>U<sub>F</sub></td><td>2.0 V (typical)</td><td>n/a</td></tr>
+                  <tr><td>I</td><td>13.6 mA</td><td>n/a</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="todo">Fill in the measured column after the build, then explain any difference (the real U<sub>F</sub>, resistor tolerance, the supply's exact voltage).</p>
+          </section>
+
+          <section id="problems">
+            <h2>Problems and solutions</h2>
+            <p class="todo">To be written after the build: what did not work at first, and how you found and fixed it.</p>
+          </section>
+
+          <section id="learned">
+            <h2>What I learned</h2>
+            <p class="todo">To be written after the build, in your own words.</p>
+          </section>
+
+          <section id="improvements">
+            <h2>Possible improvements</h2>
+            <ul>
+              <li>Measure U<sub>F</sub> for LEDs of different colours and recalculate R for each.</li>
+              <li>Drive the LED from a microcontroller pin and compare the pin voltage with 5 V.</li>
+              <li>Simulate the circuit in Falstad first and compare all three: hand calculation, simulation and measurement.</li>
+            </ul>
+          </section>
+
+          <section id="links">
+            <h2>Links</h2>
+            <p>
+              <a href="https://github.com/Manuopus/electrical-engineering-portfolio" target="_blank" rel="noopener">Source code of this site on GitHub</a>
+            </p>
+          </section>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>© <span id="year"></span> Emmanuel Omoregbe</p>
+      <p>Built by hand with HTML, CSS and JavaScript.</p>
+    </div>
+  </footer>
+</body>
+</html>
