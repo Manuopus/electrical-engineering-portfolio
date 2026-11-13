@@ -73,10 +73,10 @@
         </div>
 
         <!-- The schematic of the first electronics project. The dots show conventional current flow. -->
-        <figure class="schematic" data-enter aria-label="Circuit diagram: a 5 volt supply, a 220 ohm resistor and a red LED in series">
+        <figure class="schematic" data-enter aria-label="Circuit diagram: a 5 volt supply, a 10 kilohm resistor and an LED with built-in resistor in series, measured at pin A0">
           <div class="schematic-bar" aria-hidden="true">
-            <span>project-02 / led-resistor.sch</span>
-            <span>I = (U<sub>B</sub> − U<sub>F</sub>) / R</span>
+            <span>project-02 / led-measurement.sch</span>
+            <span>I = (U<sub>B</sub> − U<sub>LED</sub>) / R</span>
           </div>
           <svg viewBox="0 0 360 250" role="img" aria-hidden="true">
             <!-- wire loop: up the left, across the top, down the right, back along the bottom -->
@@ -99,22 +99,29 @@
             <text class="value" x="20" y="126">5 V</text>
 
             <!-- resistor (top) -->
-            <rect class="gap" x="140" y="48" width="80" height="24"/>
-            <path class="part" d="M140 60 L148 60 L153 50 L163 70 L173 50 L183 70 L193 50 L203 70 L208 60 L220 60"/>
-            <text class="value" x="180" y="36" text-anchor="middle">R1 · 220 Ω</text>
+            <rect class="gap" x="120" y="48" width="80" height="24"/>
+            <path class="part" d="M120 60 L128 60 L133 50 L143 70 L153 50 L163 70 L173 50 L183 70 L188 60 L200 60"/>
+            <text class="value" x="160" y="36" text-anchor="middle">R · 10 kΩ</text>
 
-            <!-- LED (right), pointing down in the direction of current -->
+            <!-- measuring point: the Arduino's A0 pin reads the voltage here -->
+            <circle class="node" cx="245" cy="60" r="4"/>
+            <text class="value accent" x="245" y="44" text-anchor="middle">A0</text>
+
+            <!-- LED module (right): built-in resistor + LED, pointing down in the direction of current -->
+            <rect class="module" x="264" y="74" width="52" height="84" rx="4"/>
+            <rect class="gap" x="280" y="78" width="20" height="30"/>
+            <path class="part" d="M290 78 L290 81 L283 84 L297 90 L283 96 L297 102 L290 105 L290 108"/>
             <rect class="gap" x="272" y="108" width="36" height="40"/>
             <path class="part led" d="M276 112 L304 112 L290 136 Z"/>
             <line class="part" x1="276" y1="138" x2="304" y2="138"/>
             <line class="part" x1="290" y1="108" x2="290" y2="112"/>
             <line class="part" x1="290" y1="138" x2="290" y2="148"/>
-            <path class="part glow" d="M310 116 L324 106 M318 106 L324 106 L324 112"/>
-            <path class="part glow" d="M310 128 L324 118 M318 118 L324 118 L324 124"/>
-            <text class="value" x="300" y="170" text-anchor="middle">D1 · red</text>
+            <path class="part glow" d="M320 120 L334 110 M328 110 L334 110 L334 116"/>
+            <path class="part glow" d="M320 132 L334 122 M328 122 L334 122 L334 128"/>
+            <text class="value" x="290" y="178" text-anchor="middle">LED + R_int</text>
 
-            <!-- current label (bottom) -->
-            <text class="value accent" x="180" y="222" text-anchor="middle">I ≈ 13.6 mA</text>
+            <!-- predicted current (bottom) -->
+            <text class="value accent" x="180" y="222" text-anchor="middle">I ≈ 0.30 mA</text>
           </svg>
         </figure>
       </div>

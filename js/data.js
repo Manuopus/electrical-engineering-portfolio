@@ -68,11 +68,11 @@ const PORTFOLIO = {
     },
     {
       number: "02",
-      title: "LED with a current-limiting resistor",
+      title: "Measuring LED current with an Arduino Nano",
       category: "Electronics",
       status: "planned",
-      summary: "Calculate the resistor that keeps a red LED at a safe current on 5 V, then build it and measure the real current.",
-      tools: ["Breadboard", "Multimeter", "Ohm's law"],
+      summary: "Predict the LED current at 5, 10 and 20 kΩ, then measure it with the Nano as a voltmeter to test Ohm's law.",
+      tools: ["Arduino Nano", "Breadboard", "C++", "Ohm's law"],
       page: "projects/led-resistor.html",
       code: ""
     },

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LED with a current-limiting resistor · Emmanuel Omoregbe</title>
-  <meta name="description" content="Project 02: calculating, building and measuring a current-limiting resistor for a red LED on a 5 V supply.">
+  <title>Measuring LED current with an Arduino Nano · Emmanuel Omoregbe</title>
+  <meta name="description" content="Project 02: predicting and measuring the current through an LED at three series resistances, using an Arduino Nano as a voltmeter.">
   <meta name="theme-color" content="#0a1220">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,12 +45,14 @@
       <header class="project-header">
         <div class="card-meta">
           <span>Project 02 · Electronics</span>
+          <!-- EDIT: change to status-in-progress / "In progress" when you start building,
+               and to status-completed / "Completed" when results are written up -->
           <span class="status status-planned">Planned</span>
         </div>
-        <h1>LED with a current-limiting resistor</h1>
+        <h1>Measuring LED current with an Arduino Nano</h1>
         <p class="lead">
-          Calculate the resistor that keeps a red LED at a safe current on a 5 V supply,
-          then build the circuit and compare the measured current with the calculation.
+          Predict the current through an LED at three different series resistances, then measure it
+          with an Arduino Nano used as a voltmeter, and check whether Ohm's law holds.
         </p>
       </header>
 
@@ -62,6 +64,7 @@
             <li><a href="#theory">Theory</a></li>
             <li><a href="#components">Components</a></li>
             <li><a href="#design">Design and calculation</a></li>
+            <li><a href="#program">Measurement program</a></li>
             <li><a href="#implementation">Implementation</a></li>
             <li><a href="#results">Results</a></li>
             <li><a href="#problems">Problems and solutions</a></li>
@@ -75,10 +78,13 @@
           <section id="objective">
             <h2>Objective</h2>
             <p>
-              An LED is not a resistor: once the voltage across it reaches its forward voltage, its
-              current rises very steeply. Connected straight to 5 V it would draw far too much current
-              and burn out. The goal is to choose a series resistor that limits the current to a safe
-              value, and to prove the choice by measurement.
+              A series resistor limits the current through an LED. This project tests that relationship
+              with real measurements: if the resistance is halved, does the current double?
+            </p>
+            <p>
+              I don't have a multimeter, so the Arduino Nano does the measuring. Its analog inputs read
+              voltages, and Ohm's law turns the voltage across a known resistor into a current.
+              All parts come from the Franzis Maker Kit for Arduino.
             </p>
           </section>
 
@@ -89,18 +95,44 @@
               For a resistor, voltage <code>U</code> (volts, V), resistance <code>R</code> (ohms, Ω) and
               current <code>I</code> (amperes, A) are linked by:
             </p>
-            <div class="calc"><p class="result">U = R · I &nbsp;&nbsp;⇔&nbsp;&nbsp; R = U / I &nbsp;&nbsp;⇔&nbsp;&nbsp; I = U / R</p></div>
+            <div class="calc"><p class="result">U = R · I &nbsp;&nbsp;⇔&nbsp;&nbsp; I = U / R</p></div>
 
-            <h3>Kirchhoff's voltage law in this circuit</h3>
+            <h3>Kirchhoff's voltage law</h3>
             <p>
-              In a series loop, the supply voltage is shared between the parts. The LED takes its forward
-              voltage <code>U<sub>F</sub></code>, and the resistor takes the rest:
+              In a series loop, the supply voltage is shared between the parts. The LED takes the voltage
+              <code>U<sub>LED</sub></code> and the resistor takes the rest:
             </p>
-            <div class="calc"><p class="result">U<sub>B</sub> = U<sub>F</sub> + U<sub>R</sub> &nbsp;&nbsp;⇒&nbsp;&nbsp; U<sub>R</sub> = U<sub>B</sub> − U<sub>F</sub></p></div>
+            <div class="calc"><p class="result">U<sub>B</sub> = U<sub>LED</sub> + U<sub>R</sub> &nbsp;&nbsp;⇒&nbsp;&nbsp; U<sub>R</sub> = U<sub>B</sub> − U<sub>LED</sub></p></div>
             <p>
-              Because the parts are in series, the same current flows through the resistor and the LED.
-              So setting the resistor's current sets the LED's current.
+              The same current flows through every part of a series circuit, so measuring the current
+              in the resistor also gives the current in the LED.
             </p>
+
+            <h3>Series and parallel resistors</h3>
+            <p>Two 10 kΩ resistors give two more resistance values:</p>
+            <div class="calc">
+              <p>Series: R = R<sub>1</sub> + R<sub>2</sub></p>
+              <p>Parallel: 1/R = 1/R<sub>1</sub> + 1/R<sub>2</sub></p>
+            </div>
+
+            <h3>An LED with a built-in resistor</h3>
+            <p>
+              The kit's LEDs contain their own series resistor, whose value is not given. What the
+              Arduino measures across the LED is therefore the LED's forward voltage plus the small
+              voltage across that hidden resistor.
+            </p>
+
+            <h3>The Arduino as a voltmeter</h3>
+            <p>
+              <code>analogRead()</code> returns a number <code>N</code> from 0 to 1023, where 1023 means
+              "equal to the supply voltage <code>U<sub>B</sub></code>":
+            </p>
+            <div class="calc"><p class="result">U = N / 1023 · U<sub>B</sub></p></div>
+            <p>
+              <code>U<sub>B</sub></code> is never exactly 5.00 V, so the program first measures the
+              Nano's 3.3 V pin, a known voltage, and works out the real supply voltage from it:
+            </p>
+            <div class="calc"><p class="result">U<sub>B</sub> = 3.3 V · 1023 / N<sub>3V3</sub></p></div>
           </section>
 
           <section id="components">
@@ -111,22 +143,23 @@
                   <tr><th>Part</th><th>Value</th><th>Purpose</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>Supply</td><td>5 V (USB or microcontroller board)</td><td>Low-voltage power source</td></tr>
-                  <tr><td>LED (D1)</td><td>Red, 5 mm, U<sub>F</sub> ≈ 2.0 V</td><td>Load to protect</td></tr>
-                  <tr><td>Resistor (R1)</td><td>220 Ω, ¼ W</td><td>Limits the current</td></tr>
-                  <tr><td>Breadboard, jumper wires</td><td>n/a</td><td>Build without soldering</td></tr>
-                  <tr><td>Multimeter</td><td>mA and V ranges</td><td>Measure current and voltages</td></tr>
+                  <tr><td>Arduino Nano</td><td>USB powered, 5 V</td><td>Power source and voltmeter</td></tr>
+                  <tr><td>LED</td><td>With built-in series resistor</td><td>The load being measured</td></tr>
+                  <tr><td>2 resistors</td><td>10 kΩ each (brown, black, orange)</td><td>Known resistance for the current measurement</td></tr>
+                  <tr><td>Breadboard, solid wire</td><td>n/a</td><td>Build without soldering</td></tr>
+                  <tr><td>Arduino IDE</td><td>n/a</td><td>Write and upload the program, read the Serial Monitor</td></tr>
                 </tbody>
               </table>
             </div>
-            <!-- EDIT: replace the typical LED values with the values from your LED's datasheet -->
+            <p>All parts are from the Franzis Maker Kit for Arduino.</p>
+            <!-- EDIT: add the LED colour you used -->
           </section>
 
           <section id="design">
             <h2>Design and calculation</h2>
 
-            <figure class="schematic" aria-label="Circuit diagram: 5 volt supply, 220 ohm resistor and red LED in series">
-              <div class="schematic-bar" aria-hidden="true"><span>led-resistor.sch</span><span>series circuit</span></div>
+            <figure class="schematic" aria-label="Circuit diagram: 5 volt supply, 10 kilohm resistor and an LED with built-in resistor in series. Analog pin A0 measures the voltage between the resistor and the LED.">
+              <div class="schematic-bar" aria-hidden="true"><span>led-measurement.sch</span><span>series circuit</span></div>
               <svg viewBox="0 0 360 250" role="img" aria-hidden="true">
                 <path class="wire" d="M70 190 L70 60 L290 60 L290 190 Z"/>
                 <rect class="gap" x="52" y="108" width="36" height="34"/>
@@ -136,60 +169,133 @@
                 <line class="part" x1="70" y1="128" x2="70" y2="142"/>
                 <text class="label" x="96" y="118">+</text>
                 <text class="value" x="20" y="126">5 V</text>
-                <rect class="gap" x="140" y="48" width="80" height="24"/>
-                <path class="part" d="M140 60 L148 60 L153 50 L163 70 L173 50 L183 70 L193 50 L203 70 L208 60 L220 60"/>
-                <text class="value" x="180" y="36" text-anchor="middle">R1 · 220 Ω</text>
+                <rect class="gap" x="120" y="48" width="80" height="24"/>
+                <path class="part" d="M120 60 L128 60 L133 50 L143 70 L153 50 L163 70 L173 50 L183 70 L188 60 L200 60"/>
+                <text class="value" x="160" y="36" text-anchor="middle">R · 10 kΩ</text>
+                <circle class="node" cx="245" cy="60" r="4"/>
+                <text class="value accent" x="245" y="44" text-anchor="middle">A0</text>
+                <rect class="module" x="264" y="74" width="52" height="84" rx="4"/>
+                <rect class="gap" x="280" y="78" width="20" height="30"/>
+                <path class="part" d="M290 78 L290 81 L283 84 L297 90 L283 96 L297 102 L290 105 L290 108"/>
                 <rect class="gap" x="272" y="108" width="36" height="40"/>
                 <path class="part led" d="M276 112 L304 112 L290 136 Z"/>
                 <line class="part" x1="276" y1="138" x2="304" y2="138"/>
                 <line class="part" x1="290" y1="108" x2="290" y2="112"/>
                 <line class="part" x1="290" y1="138" x2="290" y2="148"/>
-                <text class="value" x="300" y="170" text-anchor="middle">D1 · red</text>
-                <text class="value accent" x="180" y="222" text-anchor="middle">I ≈ 13.6 mA</text>
+                <text class="value" x="290" y="178" text-anchor="middle">LED + R_int</text>
+                <text class="value accent" x="180" y="222" text-anchor="middle">I ≈ 0.30 mA</text>
               </svg>
             </figure>
 
             <h3>Given values</h3>
             <ul>
-              <li>Supply voltage: U<sub>B</sub> = 5.0 V</li>
-              <li>LED forward voltage (typical red LED): U<sub>F</sub> ≈ 2.0 V</li>
-              <li>Target current: I = 15 mA = 0.015 A (below the usual 20 mA maximum)</li>
+              <li>Supply voltage: U<sub>B</sub> ≈ 5.0 V (USB)</li>
+              <li>Voltage across the LED: U<sub>LED</sub> ≈ 2.0 V (assumed for a red LED, to be measured)</li>
+              <li>Known resistor: R = 10 kΩ = 10 000 Ω</li>
             </ul>
 
             <h3>Step 1: voltage across the resistor</h3>
             <div class="calc">
-              <p>U<sub>R</sub> = U<sub>B</sub> − U<sub>F</sub></p>
+              <p>U<sub>R</sub> = U<sub>B</sub> − U<sub>LED</sub></p>
               <p>U<sub>R</sub> = 5.0 V − 2.0 V</p>
               <p class="result">U<sub>R</sub> = 3.0 V</p>
             </div>
 
-            <h3>Step 2: required resistance</h3>
-            <div class="calc">
-              <p>R = U<sub>R</sub> / I</p>
-              <p>R = 3.0 V / 0.015 A</p>
-              <p class="result">R = 200 Ω</p>
-              <p class="step">200 Ω is not a standard value. The next higher E12 value is 220 Ω. Rounding up keeps the current slightly lower, which is the safe side.</p>
-            </div>
-
-            <h3>Step 3: actual current with 220 Ω</h3>
+            <h3>Step 2: predicted current</h3>
             <div class="calc">
               <p>I = U<sub>R</sub> / R</p>
-              <p>I = 3.0 V / 220 Ω</p>
-              <p class="result">I ≈ 0.0136 A = 13.6 mA</p>
+              <p>I = 3.0 V / 10 000 Ω</p>
+              <p class="result">I = 0.0003 A = 0.30 mA</p>
+              <p class="step">Far below the 20 mA an LED usually allows, so the LED glows dimly and safely.</p>
             </div>
 
-            <h3>Step 4: power in the resistor</h3>
+            <h3>Step 3: power in the resistor</h3>
             <div class="calc">
               <p>P = U<sub>R</sub> · I</p>
-              <p>P = 3.0 V · 0.0136 A</p>
-              <p class="result">P ≈ 0.041 W = 41 mW</p>
-              <p class="step">A ¼ W resistor is rated for 250 mW, about six times more than needed, so it stays cool.</p>
+              <p>P = 3.0 V · 0.0003 A</p>
+              <p class="result">P = 0.0009 W = 0.9 mW</p>
+              <p class="step">Tiny: the resistor stays cold.</p>
             </div>
+
+            <h3>Step 4: the other two setups</h3>
+            <div class="calc">
+              <p class="step">Setup B, two 10 kΩ in parallel:</p>
+              <p>1/R = 1/10 000 Ω + 1/10 000 Ω = 2/10 000 Ω</p>
+              <p class="result">R = 5 000 Ω = 5 kΩ</p>
+              <p class="step">Setup C, two 10 kΩ in series:</p>
+              <p>R = 10 000 Ω + 10 000 Ω</p>
+              <p class="result">R = 20 000 Ω = 20 kΩ</p>
+            </div>
+
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Setup</th><th>Resistance</th><th>Predicted current</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>A: one resistor</td><td>10 kΩ</td><td>3.0 V / 10 kΩ = 0.30 mA</td></tr>
+                  <tr><td>B: parallel</td><td>5 kΩ</td><td>3.0 V / 5 kΩ = 0.60 mA</td></tr>
+                  <tr><td>C: series</td><td>20 kΩ</td><td>3.0 V / 20 kΩ = 0.15 mA</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>
+              <strong>Hypothesis:</strong> halving the resistance doubles the current, and doubling it
+              halves the current.
+            </p>
+          </section>
+
+          <section id="program">
+            <h2>Measurement program</h2>
+            <p>
+              The Nano reads A0 (the point between the resistor and the LED) and A1 (connected to the
+              3.3 V pin). Each value is the average of 20 readings to reduce noise. The results are
+              printed once a second, separated by tabs so they can be pasted into a spreadsheet.
+            </p>
+<pre class="code-block"><code>// Project 02 – LED current measurement with an Arduino Nano
+// Wiring: 5V -&gt; R_KNOWN -&gt; node X (A0) -&gt; LED -&gt; GND
+//         A1 -&gt; 3V3 pin (known reference voltage)
+
+const float R_KNOWN = 10000.0;  // ohms: 10000 (A), 5000 (B), 20000 (C)
+const float V_3V3   = 3.3;      // voltage of the 3V3 pin
+const int   SAMPLES = 20;       // readings averaged per measurement
+
+// Reads a pin 20 times and returns the average, to reduce noise
+float averageRead(int pin) {
+  long sum = 0;
+  for (int i = 0; i &lt; SAMPLES; i++) {
+    sum += analogRead(pin);
+    delay(2);
+  }
+  return sum / (float)SAMPLES;
+}
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("Vcc[V]\tU_LED[V]\tU_R[V]\tI[mA]");
+}
+
+void loop() {
+  float raw3v3 = averageRead(A1);
+  float rawLed = averageRead(A0);
+
+  float vcc  = V_3V3 * 1023.0 / raw3v3;  // real supply voltage
+  float uLed = rawLed * vcc / 1023.0;    // voltage across the LED
+  float uR   = vcc - uLed;               // voltage across the resistor
+  float iMa  = uR / R_KNOWN * 1000.0;    // current in mA (Ohm's law)
+
+  Serial.print(vcc, 3);  Serial.print("\t");
+  Serial.print(uLed, 3); Serial.print("\t");
+  Serial.print(uR, 3);   Serial.print("\t");
+  Serial.println(iMa, 3);
+
+  delay(1000);
+}</code></pre>
           </section>
 
           <section id="implementation">
             <h2>Implementation</h2>
-            <p class="todo">To be written after the build: how the circuit was placed on the breadboard, which way round the LED went (anode/cathode) and how the multimeter was connected in series to measure current. Add a photo.</p>
+            <p class="todo">To be written after the build: how the Nano and the circuit were placed on the breadboard, how the resistors were rearranged for setups B and C, and how the program was uploaded. Add photos of the circuit and of the two resistors in parallel.</p>
           </section>
 
           <section id="results">
@@ -197,16 +303,16 @@
             <div class="table-scroll">
               <table class="data-table">
                 <thead>
-                  <tr><th>Quantity</th><th>Calculated</th><th>Measured</th></tr>
+                  <tr><th>Setup</th><th>R</th><th>Predicted I</th><th>Measured I</th><th>Measured U<sub>LED</sub></th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>U<sub>R</sub></td><td>3.0 V</td><td>n/a</td></tr>
-                  <tr><td>U<sub>F</sub></td><td>2.0 V (typical)</td><td>n/a</td></tr>
-                  <tr><td>I</td><td>13.6 mA</td><td>n/a</td></tr>
+                  <tr><td>A</td><td>10 kΩ</td><td>0.30 mA</td><td>n/a</td><td>n/a</td></tr>
+                  <tr><td>B</td><td>5 kΩ</td><td>0.60 mA</td><td>n/a</td><td>n/a</td></tr>
+                  <tr><td>C</td><td>20 kΩ</td><td>0.15 mA</td><td>n/a</td><td>n/a</td></tr>
                 </tbody>
               </table>
             </div>
-            <p class="todo">Fill in the measured column after the build, then explain any difference (the real U<sub>F</sub>, resistor tolerance, the supply's exact voltage).</p>
+            <p class="todo">Fill in the measured values (the average of 10 readings per setup) and a screenshot of the Serial Monitor. Then answer: did halving R double the current? Explain any differences from the prediction: the real supply voltage, the LED's real voltage, the ±5 % resistor tolerance, and the measuring steps of about 5 mV.</p>
           </section>
 
           <section id="problems">
@@ -222,9 +328,10 @@
           <section id="improvements">
             <h2>Possible improvements</h2>
             <ul>
-              <li>Measure U<sub>F</sub> for LEDs of different colours and recalculate R for each.</li>
-              <li>Drive the LED from a microcontroller pin and compare the pin voltage with 5 V.</li>
-              <li>Simulate the circuit in Falstad first and compare all three: hand calculation, simulation and measurement.</li>
+              <li>Use the three measurements to estimate the value of the LED's hidden built-in resistor.</li>
+              <li>Plot the measured current against 1/R to check that the points lie on a straight line.</li>
+              <li>Compare the Arduino readings with a multimeter, once one is available.</li>
+              <li>Repeat the measurements with LEDs of different colours and compare their voltages.</li>
             </ul>
           </section>
 

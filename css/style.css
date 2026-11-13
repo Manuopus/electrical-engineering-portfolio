@@ -486,6 +486,8 @@ code,
 .schematic .part.led { fill: rgba(255, 90, 90, 0.16); stroke: #ff7a7a; }
 .schematic .part.glow { stroke: #ff7a7a; stroke-width: 1.5; }
 .schematic .current circle { fill: var(--accent); }
+.schematic .node { fill: var(--accent); }
+.schematic .module { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 4 4; }
 
 .schematic .label,
 .schematic .value {
@@ -909,6 +911,24 @@ code,
 .calc .result {
   color: var(--accent);
   font-weight: 500;
+}
+
+/* program code shown on a project page */
+.code-block {
+  margin: 20px 0;
+  padding: 20px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #c9d6ea;
+  tab-size: 2;
+}
+
+.code-block code {
+  font-size: inherit;
 }
 
 .data-table {
